@@ -1,4 +1,5 @@
 <?php
-	echo 'medinfo page';
-	echo 'else';
+	$xml_parser = xml_parser_create();
+	
+	
 ?>
