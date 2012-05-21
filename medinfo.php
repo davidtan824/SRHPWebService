@@ -1,11 +1,12 @@
 <?php
-	
-	$url='http://rxnav.nlm.nih.gov/REST/rxcui?name=lipitor';
+	include_once('simple_html_dom.php');
+	$drugname=$_GET["drugname"];
+	$url='http://rxnav.nlm.nih.gov/REST/rxcui?name='.$drugname;
 	$xml = simplexml_load_file($url);
-	//var_dump($xml);
+	
 	$mname=$xml->idGroup[0]->name;
 	$drxcui=$xml->idGroup[0]->rxnormId;
-	//echo $mname;
+	
 	if($drxcui){
 		
 		//echo $drxcui;
@@ -17,9 +18,13 @@
 	$medlinexml=simplexml_load_file($medlineplusurl);
 	
 	$link=$medlinexml->entry->link->attributes()->href;
+	$html=file_get_html($link);
+	foreach($html->find('.drugResults dt a') as $e) 
 	
-	$html=file_get_contents($link);
-	echo $html;
+	echo '<a href="'.$e->href.'">'.$e->innertext.'</a>';
+    
+		
+	
 	
 ?>
 
