@@ -18,19 +18,20 @@ return $xmlStr;
 	$drxcui=$xml->idGroup[0]->rxnormId;
 	//echo $drxcui.'<br/>';
 
-	$medlineplusurl='http://apps2.nlm.nih.gov/medlineplus/services/mpconnect_service.cfm?mainSearchCriteria.v.cs=2.16.840.1.113883.6.88&mainSearchCriteria.v.c='.$drxcui;
 	
-	$medlinexml=simplexml_load_file($medlineplusurl);
+	$medlineplusurl='http://apps.nlm.nih.gov/medlineplus/services/mpconnect.cfm?mainSearchCriteria.v.cs=2.16.840.1.113883.6.88&mainSearchCriteria.v.c='.$drxcui.'&mainSearchCriteria.v.dn=&informationRecipient.languageCode.c=en';
 	
-	$link=$medlinexml->entry->link->attributes()->href;
-	$html=file_get_html($link);
+	
+	header('Content-type: text/xml');
+	$html=file_get_html($medlineplusurl);
 	
 	foreach($html->find('.drugResults dt a') as $e) 
 	{
+		
 		$detailurl=$e->href;
 	
 		$detailhtml=file_get_html($detailurl);
-		header('Content-type: text/xml');
+		
 		echo '<entries>';
 		
 		$titles=$detailhtml->find('h2');
@@ -49,6 +50,7 @@ return $xmlStr;
 		}
 		
 		echo '</entries>';
+		break;
 	}
 	
 	function getblurb($e){
