@@ -33,7 +33,9 @@ return $xmlStr;
 		$detailhtml=file_get_html($detailurl);
 		
 		echo '<entries>';
-		
+		echo '<generic>';
+		echo $e->innertext;
+		echo '</generic>';
 		$titles=$detailhtml->find('h2');
 		
 		foreach($titles as $title){
