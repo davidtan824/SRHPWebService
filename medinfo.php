@@ -13,8 +13,9 @@ return $xmlStr;
 	$drugname=$_GET["drugname"];
 	$url='http://rxnav.nlm.nih.gov/REST/rxcui?name='.$drugname;
 	$xml = simplexml_load_file($url);
-	
+	$genericname="";
 	$mname=$xml->idGroup[0]->name;
+	//we need to catch this exception, maybe there is no matching name
 	$drxcui=$xml->idGroup[0]->rxnormId;
 	//echo $drxcui.'<br/>';
 
@@ -34,8 +35,15 @@ return $xmlStr;
 		
 		echo '<entries>';
 		echo '<generic>';
-		echo $e->innertext;
+		$genericname=$e->innertext;
+		echo $genericname;
 		echo '</generic>';
+		$ndfrtSearchUrl='http://rxnav.nlm.nih.gov/REST/Ndfrt/search?conceptName='.$genericname.'&kindName=INGREDIENT_KIND';
+		$ndfrtsearchxml=simplexml_load_file($ndfrtSearchUrl);
+		$nui=$ndfrtsearchxml->groupConcepts[0]->concept[0]->conceptNui;
+		echo '<nui>';
+		echo $nui;
+		echo '</nui>';
 		$titles=$detailhtml->find('h2');
 		
 		foreach($titles as $title){
